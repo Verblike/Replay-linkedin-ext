@@ -6,6 +6,8 @@ const storage = createStorage<ThemeStateType>(
   {
     theme: 'light',
     isLight: true,
+    email: '',
+    uid: '',
   },
   {
     storageEnum: StorageEnum.Local,
@@ -20,6 +22,7 @@ export const exampleThemeStorage: ThemeStorageType = {
       const newTheme = currentState.theme === 'light' ? 'dark' : 'light';
 
       return {
+        ...currentState,
         theme: newTheme,
         isLight: newTheme === 'light',
       };

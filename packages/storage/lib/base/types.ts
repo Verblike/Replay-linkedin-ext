@@ -46,6 +46,8 @@ export type StorageConfigType<D = string> = {
 
 export interface ThemeStateType {
   theme: 'light' | 'dark';
+  uid: string;
+  email: string;
   isLight: boolean;
 }
 
