@@ -1,3 +1,4 @@
+import { getAuthorUsername } from './getAuthorUsername';
 import { getLinkedInPostUrl } from './getPostUrl';
 import { sampleFunction } from '@src/sample-function';
 
@@ -8,7 +9,7 @@ void sampleFunction();
 // --- Add below ---
 
 // Get the full URL for the icon
-const iconUrl = chrome.runtime.getURL('icon-34.png');
+const iconUrl = chrome.runtime.getURL('icon-32.png');
 
 // Create the '+' button element
 const plusBtn = document.createElement('button');
@@ -73,14 +74,14 @@ const getUserAuth = (): Promise<{ email: string | null; uid: string | null }> =>
     });
   });
 
-const uploadTextToFirebase = (email: string, uid: string, text: string, postUrl?: string) => {
+const uploadTextToFirebase = (email: string, uid: string, text: string, postUrl?: string, authorUsername?: string) => {
   console.log('Uploading text and postUrl to Firebase');
-  chrome.runtime.sendMessage({ type: 'UPLOAD_TEXT', email, uid, text, postUrl }, response => {
+  chrome.runtime.sendMessage({ type: 'UPLOAD_TEXT', email, uid, text, postUrl, authorUsername }, response => {
     console.log('Upload response:', response);
   });
 };
 
-const AUTH_URL = 'https://your-auth-website.com'; // Must match popup.tsx
+const AUTH_URL = 'https://surface-up.web.app/'; // Must match popup.tsx
 
 plusBtn.addEventListener('click', async () => {
   plusBtn.style.transition = 'opacity 0.3s';
@@ -104,8 +105,10 @@ plusBtn.addEventListener('click', async () => {
     return;
   }
   if (text) {
-    // Upload both text and postUrl to Firebase
-    uploadTextToFirebase(email, uid, text, postUrl);
+    // Get author username from selection
+    const authorUsername = getAuthorUsername(selection?.anchorNode ?? null);
+    // Upload text, postUrl and authorUsername to Firebase
+    uploadTextToFirebase(email, uid, text, postUrl, authorUsername);
   }
 
   setTimeout(() => {

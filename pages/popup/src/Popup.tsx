@@ -2,15 +2,16 @@ import { db } from './firebase';
 import { useStorage } from '@extension/shared';
 import { exampleThemeStorage } from '@extension/storage';
 import { cn } from '@extension/ui';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 
-const AUTH_URL = 'https://your-auth-website.com'; // TODO: Replace with your actual auth URL
+const AUTH_URL = 'https://surface-up.web.app/'; // TODO: Replace with your actual auth URL
 
 interface Highlight {
   text: string;
   timestamp: number;
   email: string;
+  authorUsername?: string;
   postUrl?: string;
   id?: string;
 }
@@ -25,7 +26,8 @@ const Popup = () => {
       setLoading(true);
       const fetchHighlights = async () => {
         const highlightsRef = collection(db, 'users', uid, 'highlights');
-        const snapshot = await getDocs(highlightsRef);
+        const q = query(highlightsRef, orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(q);
         const data: Highlight[] = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as Highlight);
         setHighlights(data);
         setLoading(false);
@@ -75,6 +77,9 @@ const Popup = () => {
                   )}>
                   <div className="mb-1">
                     <b>Text:</b> <span className="break-words">{h.text}</span>
+                  </div>
+                  <div className="mb-1">
+                    <b>Author:</b> <span className="break-words">{h.authorUsername ?? h.email ?? 'Unknown'}</span>
                   </div>
                   <div className="mb-1">
                     <b>Timestamp:</b> {new Date(h.timestamp).toLocaleString()}

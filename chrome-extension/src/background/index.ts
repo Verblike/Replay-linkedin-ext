@@ -1,7 +1,7 @@
 import 'webextension-polyfill';
 import { db } from '../../../pages/popup/src/firebase';
 import { exampleThemeStorage } from '@extension/storage';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, setDoc, doc } from 'firebase/firestore';
 
 // Listen for messages from external sources
 chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
@@ -30,6 +30,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'UPLOAD_TEXT' && request.email && request.text && request.uid) {
     console.log('Uploading text to Firebase');
     // Upload to Firestore: users/{uid}/highlights/{autoId}
+    // Ensure the user document exists / is updated with uid and email
+    const userDocRef = doc(db, 'users', request.uid);
+    setDoc(userDocRef, { uid: request.uid, email: request.email }, { merge: true }).catch(error => {
+      console.error('Failed to set user document:', error);
+    });
     const highlightsRef = collection(db, 'users', request.uid, 'highlights');
     addDoc(highlightsRef, {
       ...request,
@@ -40,6 +45,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // Indicate async response
     return true;
   }
+  // Not handling this message — indicate no async response will be sent
+  return false;
 });
 
 exampleThemeStorage.get().then(theme => {
