@@ -1,3 +1,4 @@
+import { getAuthorName } from './getAuthorName';
 import { getAuthorUsername } from './getAuthorUsername';
 import { getLinkedInPostUrl } from './getPostUrl';
 import { sampleFunction } from '@src/sample-function';
@@ -52,6 +53,7 @@ document.addEventListener('mouseup', () => {
     // Center X of selection
     const centerX = rect.left + rect.width / 2;
     // Position above selection, centered horizontally and vertically
+    plusBtn.style.opacity = '1';
     plusBtn.style.display = 'block';
     // Wait for button to render so offsetWidth/offsetHeight are available
     setTimeout(() => {
@@ -74,11 +76,21 @@ const getUserAuth = (): Promise<{ email: string | null; uid: string | null }> =>
     });
   });
 
-const uploadTextToFirebase = (email: string, uid: string, text: string, postUrl?: string, authorUsername?: string) => {
+const uploadTextToFirebase = (
+  email: string,
+  uid: string,
+  text: string,
+  postUrl?: string,
+  authorUsername?: string,
+  authorName?: string,
+) => {
   console.log('Uploading text and postUrl to Firebase');
-  chrome.runtime.sendMessage({ type: 'UPLOAD_TEXT', email, uid, text, postUrl, authorUsername }, response => {
-    console.log('Upload response:', response);
-  });
+  chrome.runtime.sendMessage(
+    { type: 'UPLOAD_TEXT', email, uid, text, postUrl, authorUsername, authorName },
+    response => {
+      console.log('Upload response:', response);
+    },
+  );
 };
 
 const AUTH_URL = 'https://surface-up.web.app/'; // Must match popup.tsx
@@ -107,8 +119,10 @@ plusBtn.addEventListener('click', async () => {
   if (text) {
     // Get author username from selection
     const authorUsername = getAuthorUsername(selection?.anchorNode ?? null);
-    // Upload text, postUrl and authorUsername to Firebase
-    uploadTextToFirebase(email, uid, text, postUrl, authorUsername);
+    // Get author name from selection
+    const authorName = getAuthorName(selection?.anchorNode ?? null);
+    // Upload text, postUrl, authorUsername and authorName to Firebase
+    uploadTextToFirebase(email, uid, text, postUrl, authorUsername, authorName);
   }
 
   setTimeout(() => {

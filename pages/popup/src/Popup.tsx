@@ -12,6 +12,7 @@ interface Highlight {
   timestamp: number;
   email: string;
   authorUsername?: string;
+  authorName?: string;
   postUrl?: string;
   id?: string;
 }
@@ -81,6 +82,11 @@ const Popup = () => {
                   <div className="mb-1">
                     <b>Author:</b> <span className="break-words">{h.authorUsername ?? h.email ?? 'Unknown'}</span>
                   </div>
+                  {h.authorName && (
+                    <div className="mb-1">
+                      <b>Author Name:</b> <span className="break-words">{h.authorName}</span>
+                    </div>
+                  )}
                   <div className="mb-1">
                     <b>Timestamp:</b> {new Date(h.timestamp).toLocaleString()}
                   </div>

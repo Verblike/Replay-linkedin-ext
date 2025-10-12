@@ -1,11 +1,11 @@
 {
   "extensionDescription": {
     "description": "Extension description",
-    "message": "Surface extension description"
+    "message": "Replay extension description"
   },
   "extensionName": {
     "description": "Extension name",
-    "message": "Surface"
+    "message": "Replay"
   },
   "toggleTheme": {
     "message": "Toggle theme"

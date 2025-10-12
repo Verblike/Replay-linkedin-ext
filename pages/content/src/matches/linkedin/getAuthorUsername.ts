@@ -8,7 +8,7 @@ export const getAuthorUsername = (node: Node | null): string | undefined => {
     for (const link of links) {
       const href = link.getAttribute('href');
       if (href?.startsWith('https://www.linkedin.com/in/')) {
-        return href.replace('https://www.linkedin.com/in/', '').split('/')[0];
+        return href.replace('https://www.linkedin.com/in/', '').split('/')[0].split('?')[0];
       }
     }
 
@@ -16,7 +16,7 @@ export const getAuthorUsername = (node: Node | null): string | undefined => {
     if (element.tagName.toLowerCase() === 'a') {
       const href = element.getAttribute('href');
       if (href?.startsWith('https://www.linkedin.com/in/')) {
-        return href.replace('https://www.linkedin.com/in/', '').split('/')[0];
+        return href.replace('https://www.linkedin.com/in/', '').split('/')[0].split('?')[0];
       }
     }
 

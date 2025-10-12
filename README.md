@@ -1,3 +1,10 @@
+1) try connect client's email 
+2) update email layout 
+3) publish the extension 
+4) update landing page 
+5) update email schedule logic
+
+
 <div align="center">
 
 <picture>
