@@ -24,7 +24,7 @@ const manifest = {
   name: '__MSG_extensionName__',
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  permissions: ['storage', 'tabs'],
+  permissions: ['storage'],
   background: {
     service_worker: 'background.js',
     type: 'module',
